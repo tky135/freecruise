@@ -411,7 +411,7 @@ def save_videos(
             layout,
             num_timestamps=num_timestamps,
             keys=keys,
-            num_cams=num_cams,
+            num_cams=1,
             save_images=save_images,
             fps=fps,
             verbose=verbose,

@@ -375,9 +375,9 @@ class CameraOptModule_ts(torch.nn.Module):
             plt.plot(input_range.cpu().numpy(), embeds[:, i].detach().cpu().numpy(), label=f"dim {i}", color='C'+str(i))
 
         plt.legend()
-        plt.savefig(f"embedding{self.counter}.png")
+        # plt.savefig(f"embedding{self.counter}.png")
         # read image and save to wandb
-        img = plt.imread(f"embedding{self.counter}.png")
+        # img = plt.imread(f"embedding{self.counter}.png")
         # wandb.log({"embedding": wandb.Image(img)})
         
         self.counter += 1
