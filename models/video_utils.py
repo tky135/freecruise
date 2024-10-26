@@ -133,7 +133,10 @@ def render(
     camera_downscale = trainer._get_downscale_factor()
     for i in tqdm(indices, desc=f"rendering {dataset.split}", dynamic_ncols=True):
         # get image and camera infos
+        # import ipdb ; ipdb.set_trace()  # 只保留image_00
         image_infos, cam_infos = dataset.get_image(i, camera_downscale)
+        if cam_infos['cam_id'].flatten()[0].item() == 1:
+            continue
         for k, v in image_infos.items():
             if isinstance(v, Tensor):
                 image_infos[k] = v.cuda(non_blocking=True)

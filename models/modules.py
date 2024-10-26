@@ -1030,8 +1030,8 @@ class Ground(nn.Module):
         after_affine = image_infos['after_affine'].cpu().numpy() * 255 if 'after_affine' in image_infos else np.zeros_like(gt_img)
         for i in range(img_fine.shape[-1]):
             if len(out_rgb_fine) > 0:
-                rgb_diff = np.abs(img_fine[..., i] - gt_img)
-                rgb_diff[mask == 0] = np.array([255, 0, 0])
+                rgb_diff = np.abs(after_affine - gt_img)
+                # rgb_diff[mask == 0] = np.array([255, 0, 0])
                 right_col = np.concatenate([img_fine[..., i],
                                             gt_img, rgb_diff])
                 left_col = np.concatenate([img_orig[..., i],

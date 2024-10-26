@@ -13,11 +13,11 @@ data:
   preload_device: cuda # choose from ["cpu", "cuda"], cache the data on this device
   pixel_source: # image source and object annotations
     type: datasets.kitti360.kitti360_sourceloader.KITTI360PixelSource
-    cameras: [0] # which cameras to use
-    downscale_when_loading: [1] # the size of the images to load
+    cameras: [0, 1] # which cameras to use
+    downscale_when_loading: [1, 1] # the size of the images to load
     downscale: 1 # downscale factor wrt to the downscale_when_loading
     undistort: False # whether to undistort the images
-    test_image_stride: 0 # use every Nth timestep for the test set. if 0, use all images for training and none for testing
+    test_image_stride: 2 # use every Nth timestep for the test set. if 0, use all images for training and none for testing
     load_sky_mask: True # whether to load sky mask
     load_dynamic_mask: True # whether to load dynamic mask
     load_objects: True # whether to load object bounding boxes

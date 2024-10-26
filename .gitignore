@@ -3,5 +3,8 @@ data
 tkyout
 wandb
 *.pcd
-
-
+*.png
+*.zip
+kitti360_data
+SegFormer
+segformer*.pth

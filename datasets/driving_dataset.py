@@ -160,8 +160,8 @@ class DrivingDataset(SceneDataset):
         )
         pixel_source.to(self.device)
         
-        self.train_timesteps = pixel_source.train_ts
-        self.test_timesteps = pixel_source.test_ts
+        # self.train_timesteps = pixel_source.train_ts
+        # self.test_timesteps = pixel_source.test_ts
         self.ts2frame = pixel_source.ts2frame
         self.frame2ts = pixel_source.frame2ts
         
@@ -592,32 +592,32 @@ class DrivingDataset(SceneDataset):
         return valid_mask
 
     def split_train_test(self):
-        # if self.data_cfg.pixel_source.test_image_stride != 0:
-        #     test_timesteps = np.arange(
-        #         # it makes no sense to have test timesteps before the start timestep
-        #         self.data_cfg.pixel_source.test_image_stride,
-        #         self.num_img_timesteps,
-        #         self.data_cfg.pixel_source.test_image_stride,
-        #     )
-        # else:
-        #     test_timesteps = []
-        # train_timesteps = np.array(
-        #     [i for i in range(self.num_img_timesteps) if i not in test_timesteps]
-        # )
-        # logger.info(
-        #     f"Train timesteps: \n{np.arange(self.start_timestep, self.end_timestep)[train_timesteps]}"
-        # )
-        # logger.info(
-        #     f"Test timesteps: \n{np.arange(self.start_timestep, self.end_timestep)[test_timesteps]}"
-        # )
+        if self.data_cfg.pixel_source.test_image_stride != 0:
+            test_timesteps = np.arange(
+                # it makes no sense to have test timesteps before the start timestep
+                self.data_cfg.pixel_source.test_image_stride,
+                self.num_img_timesteps,
+                self.data_cfg.pixel_source.test_image_stride,
+            )
+        else:
+            test_timesteps = []
+        train_timesteps = np.array(
+            [i for i in range(self.num_img_timesteps) if i not in test_timesteps]
+        )
+        logger.info(
+            f"Train timesteps: \n{np.arange(self.start_timestep, self.end_timestep)[train_timesteps]}"
+        )
+        logger.info(
+            f"Test timesteps: \n{np.arange(self.start_timestep, self.end_timestep)[test_timesteps]}"
+        )
 
         # propagate the train and test timesteps to the train and test indices
         train_indices, test_indices = [], []
         for t in range(self.num_img_timesteps):
-            if t in self.train_timesteps:
+            if t in train_timesteps:
                 for cam in range(self.pixel_source.num_cams):
                     train_indices.append(t * self.pixel_source.num_cams + cam)
-            elif t in self.test_timesteps:
+            elif t in test_timesteps:
                 for cam in range(self.pixel_source.num_cams):
                     test_indices.append(t * self.pixel_source.num_cams + cam)
         logger.info(f"Number of train indices: {len(train_indices)}")
@@ -628,7 +628,7 @@ class DrivingDataset(SceneDataset):
         # Again, training and testing indices are indices into the full dataset
         # train_indices are img indices, so the length is num_cams * num_train_timesteps
         # but train_timesteps are timesteps, so the length is num_train_timesteps (len(unique_train_timestamps))
-        return self.train_timesteps, self.test_timesteps, train_indices, test_indices
+        return train_timesteps, test_timesteps, train_indices, test_indices
     
     def project_lidar_pts_on_images(self, delete_out_of_view_points=True):
         """
@@ -639,6 +639,7 @@ class DrivingDataset(SceneDataset):
                 If True, the lidar points that are not visible from the camera will be removed.
         """
         for cam in self.pixel_source.camera_data.values():
+            # 用了所有的camera，包括测试集
             lidar_depth_maps = []
             for frame_idx in tqdm(
                 range(len(cam)), 
