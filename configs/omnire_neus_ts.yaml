@@ -297,7 +297,6 @@ render:
   render_novel: 
     traj_types:
       - front_center_interp # type of trajectory for novel view synthesis
-      - s_curve
       - x_shift_left
     fps: 24 # frames per second for novel view rendering
   vis_lidar: False # whether to visualize lidar points on ground truth images
