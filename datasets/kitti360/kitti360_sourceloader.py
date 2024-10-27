@@ -171,12 +171,12 @@ class KITTI360PixelSource(ScenePixelSource):
         self.end_timestep = end_timestep
         
         # calculate train and test timestamps
-        # train_frames = [int(i.split('.')[0].split('/')[-1]) for i in open(os.path.join(data_path, "train_split.txt")).readlines()]
-        # test_frames = [int(i.split('.')[0].split('/')[-1]) for i in open(os.path.join(data_path, "test_split.txt")).readlines()]
+        train_frames = [int(i.split('.')[0].split('/')[-1]) for i in open(os.path.join(data_path, "train_split.txt")).readlines()]
+        test_frames = [int(i.split('.')[0].split('/')[-1]) for i in open(os.path.join(data_path, "test_split.txt")).readlines()]
         ts2frame = sorted(list(set([int(fid.split('_')[0]) for fid in os.listdir(os.path.join(self.data_path, "images"))])))
         frame2ts = {v: k for k, v in enumerate(ts2frame)}
-        # self.train_ts = [frame2ts[i] for i in train_frames]
-        # self.test_ts = [frame2ts[i] for i in test_frames]
+        self.train_ts = [frame2ts[i] for i in train_frames]
+        self.test_ts = [frame2ts[i] for i in test_frames]
         self.ts2frame = ts2frame
         self.frame2ts = frame2ts
         self.load_data()

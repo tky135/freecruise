@@ -82,7 +82,7 @@ class Kitti360Processor(object):
         # basedir = os.path.join(self.split_dir, scene_name)
         split_file = np.loadtxt(os.path.join(self.split_dir, "train_" + f'{scene_name:02d}.txt'), dtype=str).tolist()
         self.train_split = split_file
-        self.test_split = []#np.loadtxt(os.path.join(self.split_dir, "test_" + f'{scene_name:02d}.txt'), dtype=str).tolist()
+        self.test_split = np.loadtxt(os.path.join(self.split_dir, "test_" + f'{scene_name:02d}.txt'), dtype=str).tolist()
         # test_split_file = np.loadtxt(os.path.join(self.split_dir, "test_" + f'{scene_name:02d}.txt'), dtype=str).tolist()
         # split_file = train_split_file + test_split_file
         if "images" in self.process_keys:
