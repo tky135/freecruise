@@ -1285,9 +1285,9 @@ class Ground(nn.Module):
         # 测试mask
         # test_mask = torch.ones([H, W], device=image_infos['viewdirs'].device)
         # test_mask[:int(2 / 5 * H), :] = 0    # 为了节约时间，假设前2/5不能是路面
-        # test_mask = image_infos['road_masks'] if is_train else torch.ones([H, W], device=image_infos['viewdirs'].device)
+        test_mask = image_infos['road_masks'] if is_train else torch.ones([H, W], device=image_infos['viewdirs'].device)
         # test_mask[:int(2 / 5 * H), :] = 0    # 为了节约时间，假设前2/5不能是路面
-        test_mask = image_infos['road_masks']
+        # test_mask = image_infos['road_masks']
         
         # 训练mask是从路面mask中随机采样self.batch_size个点
         if is_train:
