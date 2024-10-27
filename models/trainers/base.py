@@ -579,20 +579,20 @@ class BasicTrainer(nn.Module):
                 sky_loss_opacity = self.sky_opacity_loss_fn(pred_occupied_mask, gt_occupied_mask) * self.losses_dict.mask.w
                 loss_dict.update({"sky_loss_opacity": sky_loss_opacity})
             
-            # # depth loss
-            # if self.depth_loss_fn is not None:
-            #     gt_depth = image_infos["lidar_depth_map"] 
-            #     lidar_hit_mask = (gt_depth > 0).float() * valid_loss_mask * (1.0 - image_infos["road_masks"]).float()
-            #     pred_depth = outputs["depth"]
-            #     depth_loss = self.depth_loss_fn(pred_depth, gt_depth, lidar_hit_mask)
+            # depth loss
+            if self.depth_loss_fn is not None:
+                gt_depth = image_infos["lidar_depth_map"] 
+                lidar_hit_mask = (gt_depth > 0).float() * valid_loss_mask * (1.0 - image_infos["road_masks"]).float()
+                pred_depth = outputs["depth"]
+                depth_loss = self.depth_loss_fn(pred_depth, gt_depth, lidar_hit_mask)
                 
-            #     lidar_w_decay = self.losses_dict.depth.get("lidar_w_decay", -1)
-            #     if lidar_w_decay > 0:
-            #         decay_weight = np.exp(-self.step / 8000 * lidar_w_decay)
-            #     else:
-            #         decay_weight = 1
-            #     depth_loss = depth_loss * self.losses_dict.depth.w * decay_weight
-            #     loss_dict.update({"depth_loss": depth_loss})
+                lidar_w_decay = self.losses_dict.depth.get("lidar_w_decay", -1)
+                if lidar_w_decay > 0:
+                    decay_weight = np.exp(-self.step / 8000 * lidar_w_decay)
+                else:
+                    decay_weight = 1
+                depth_loss = depth_loss * self.losses_dict.depth.w * decay_weight
+                loss_dict.update({"depth_loss": depth_loss})
                 
             # ----- reg loss -----
             opacity_entropy_reg = self.losses_dict.get("opacity_entropy", None)
