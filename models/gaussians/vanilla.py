@@ -284,7 +284,7 @@ class VanillaGaussians(nn.Module):
             print(f"Class {self.class_prefix} left points: {self.num_points}")
                     
             # reset opacity
-            if self.step % reset_interval == self.ctrl_cfg.refine_interval:
+            if self.step % reset_interval == self.ctrl_cfg.refine_interval and self.step < self.ctrl_cfg.stop_split_at:
                 print("resetting opacity at step", self.step)
                 # NOTE: in nerfstudio, reset_value = cull_alpha_thresh * 0.8
                     # we align to original repo of gaussians spalting
@@ -437,7 +437,7 @@ class VanillaGaussians(nn.Module):
             loss_dict["flatten"] = flatten_loss * flatten_reg.w
         
         sparse_reg = self.reg_cfg.get("sparse_reg", None)
-        if sparse_reg:
+        if sparse_reg and self.step > sparse_reg.start_step:
             if (self.cur_radii > 0).sum():
                 opacity = torch.sigmoid(self._opacities)
                 opacity = opacity.clamp(1e-6, 1-1e-6)

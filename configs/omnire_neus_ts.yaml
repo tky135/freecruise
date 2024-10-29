@@ -29,6 +29,7 @@ trainer:
       inverse_depth: False # whether to use inverse depth, NOTE that when set to True, must normalize=True
       normalize: False # whether to normalize depth loss
       loss_type: l1 # choose from ["l1", "l2"]
+      lidar_w_decay: 1.0
     affine:
       w: 0.00001 # weight of affine regularization
   res_schedule:
@@ -52,7 +53,7 @@ trainer:
   gaussian_ctrl_general_cfg:
     warmup_steps: 12000             # warmup steps for alpha
     reset_alpha_interval: 3000    # reset alpha every n steps
-    refine_interval: 100          # refine gaussians every n steps
+    refine_interval: 300          # refine gaussians every n steps
     sh_degree_interval: 1000      # every n intervals turn on another sh degree # TODO adapt
     n_split_samples: 2            # number of samples to split gaussians into
     # may differ in different models
@@ -82,6 +83,10 @@ model:
         w: 1.
         step_interval: 10
         max_gauss_ratio: 10.       # threshold of ratio of gaussian max to min scale before applying regularization loss from the PhysGaussian paper
+      # sparse_reg:
+      #   start_step: 35000
+      #   w: 1e-1
+        
   # RigidNodes:
   #   type: models.nodes.RigidNodes
   #   init:

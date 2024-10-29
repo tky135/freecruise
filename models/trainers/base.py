@@ -564,9 +564,9 @@ class BasicTrainer(nn.Module):
                 pred_occupied_mask = outputs["opacity"].squeeze() * valid_loss_mask
         
             # rgb loss
-            over_mask = gt_rgb >= 1
-            predicted_rgb[over_mask].clip_(0, 1)
-            
+            over_mask = gt_rgb >= 1.0
+            predicted_rgb[over_mask] = predicted_rgb[over_mask].clamp(0.0, 1.0)
+
             Ll1 = torch.abs(gt_rgb - predicted_rgb).mean()
             simloss = 1 - self.ssim(gt_rgb.permute(2, 0, 1)[None, ...], predicted_rgb.permute(2, 0, 1)[None, ...])
             loss_dict.update({
@@ -588,7 +588,7 @@ class BasicTrainer(nn.Module):
                 
                 lidar_w_decay = self.losses_dict.depth.get("lidar_w_decay", -1)
                 if lidar_w_decay > 0:
-                    decay_weight = np.exp(-self.step / 8000 * lidar_w_decay)
+                    decay_weight = np.exp(-(self.step - 10000) / 8000 * lidar_w_decay)
                 else:
                     decay_weight = 1
                 depth_loss = depth_loss * self.losses_dict.depth.w * decay_weight

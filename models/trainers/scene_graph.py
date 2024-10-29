@@ -450,6 +450,8 @@ class MultiTrainer(BasicTrainer):
             )
             
             after_affine = outputs['rgb'].detach().clip(0, 1)
+            if not self.training:
+                outputs['rgb'] = outputs['rgb'].clip(0, 1)
             if self.models['Ground'].iter_step % 100 == 0 and self.training:
                 with torch.no_grad():
                     road_opacity_mean = outputs['opacity'][image_infos['road_masks'] == 1].mean()

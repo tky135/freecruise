@@ -1471,8 +1471,9 @@ class Ground(nn.Module):
         
         delta_color_loss = F.mse_loss(delta_color, torch.zeros_like(delta_color))
         
-        over_mask = true_rgb >= 1
-        color_fine[over_mask].clip_(0, 1)
+        
+        over_mask = true_rgb >= 1.0
+        color_fine[over_mask] = color_fine[over_mask].clamp(0.0, 1.0)
         color_error = (color_fine - true_rgb)
         color_fine_loss = F.l1_loss(color_error, torch.zeros_like(color_error), reduction='mean')
 
