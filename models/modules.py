@@ -899,7 +899,7 @@ class Ground(nn.Module):
         self.igr_weight = 5.0
         self.mask_weight = 0.1
         self.ssim_weight = 0.0
-        self.sdf_network = SDFNetwork_2d_hash(**{'d_out': 257, 'd_in': 2, 'd_hidden': 256, 'n_layers': 8, 'skip_in': [4], 'multires': 6, 'bias': 0.5, 'scale': 10.0, 'geometric_init': True, 'weight_norm': True}, base_resolution=64, num_clusters=1).to(self.device)
+        self.sdf_network = SDFNetwork_2d_hash(**{'d_out': 257, 'd_in': 2, 'd_hidden': 256, 'n_layers': 8, 'skip_in': [4], 'multires': 6, 'bias': 0.5, 'scale': 10.0, 'geometric_init': True, 'weight_norm': True}, base_resolution=256, num_clusters=1).to(self.device)
         self.deviation_network = SingleVarianceNetwork(**{'init_val': 0.3}).to(self.device)
         self.color_network = RenderingNetwork(**{'d_feature': 64, 'mode': 'xy_embed', 'd_in': 9, 'd_out': 3, 'd_hidden': 256, 'n_layers': 4, 'weight_norm': True, 'multires_view': 4, 'squeeze_out': True}, n_camera=6).to(self.device)
         self.label_network = LabelNetwork(**{'d_feature': 64, 'd_in': 2, 'd_out': 5, 'd_hidden': 256, 'n_layers': 4}).to(self.device)
@@ -1472,8 +1472,8 @@ class Ground(nn.Module):
         delta_color_loss = F.mse_loss(delta_color, torch.zeros_like(delta_color))
         
         
-        over_mask = true_rgb >= 1.0
-        color_fine[over_mask] = color_fine[over_mask].clamp(0.0, 1.0)
+        # over_mask = true_rgb >= 1.0
+        # color_fine[over_mask] = color_fine[over_mask].clamp(0.0, 1.0)
         color_error = (color_fine - true_rgb)
         color_fine_loss = F.l1_loss(color_error, torch.zeros_like(color_error), reduction='mean')
 

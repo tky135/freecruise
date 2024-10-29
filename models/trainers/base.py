@@ -454,7 +454,7 @@ class BasicTrainer(nn.Module):
             elif len(rgb_blended.shape) == 2:    # neus
                 neus_affine_trs = affine_trs[0, 0]
                 rgb_transformed = (neus_affine_trs[..., :3, :3] @ rgb_blended[..., None] + neus_affine_trs[..., :3, 3:])[..., 0]
-            
+            rgb_transformed = torch.tanh(4 * rgb_transformed - 2) / 2 + 0.5
             return rgb_transformed
         else:       
             return rgb_blended
@@ -564,8 +564,8 @@ class BasicTrainer(nn.Module):
                 pred_occupied_mask = outputs["opacity"].squeeze() * valid_loss_mask
         
             # rgb loss
-            over_mask = gt_rgb >= 1.0
-            predicted_rgb[over_mask] = predicted_rgb[over_mask].clamp(0.0, 1.0)
+            # over_mask = gt_rgb >= 1.0
+            # predicted_rgb[over_mask] = predicted_rgb[over_mask].clamp(0.0, 1.0)
 
             Ll1 = torch.abs(gt_rgb - predicted_rgb).mean()
             simloss = 1 - self.ssim(gt_rgb.permute(2, 0, 1)[None, ...], predicted_rgb.permute(2, 0, 1)[None, ...])
