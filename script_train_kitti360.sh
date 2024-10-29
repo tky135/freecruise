@@ -1,5 +1,9 @@
 #!/bin/bash
 
+export PATH="/home/kaiyuan.tan/miniconda3/condabin/:$PATH"
+eval "$(conda shell.bash hook)"
+conda activate drivestudio
+
 export PYTHONPATH=$(pwd)
 # python tools/train.py --config_file configs/omnire_extended_cam.yaml --output_root tkyout --project test_proj --run_name 2_6cams dataset=nuscenes/6cams data.scene_idx=2 data.start_timestep=0 data.end_timestep=-1
 
